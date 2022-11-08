@@ -24,6 +24,8 @@ function getRecipesFromStorage() {
   // A9. TODO - Complete the functionality as described in this function
   //           header. It is possible in only a single line, but should
   //           be no more than a few lines.
+  const ret = JSON.parse(localStorage.getItem('recipes'));
+  return ret;
 }
 
 /**
@@ -35,10 +37,16 @@ function getRecipesFromStorage() {
  */
 function addRecipesToDocument(recipes) {
   // A10. TODO - Get a reference to the <main> element
+  const ma = document.querySelector("main");
   // A11. TODO - Loop through each of the recipes in the passed in array,
   //            create a <recipe-card> element for each one, and populate
   //            each <recipe-card> with that recipe data using element.data = ...
   //            Append each element to <main>
+  for(let i = 0;  i < recipes.length; i++){
+    let ex = document.createElement("recipe-card");
+    ex.data=recipes[i];
+    ma.append(ex);
+  }
 }
 
 /**
@@ -51,6 +59,7 @@ function saveRecipesToStorage(recipes) {
   // B1. TODO - Complete the functionality as described in this function
   //            header. It is possible in only a single line, but should
   //            be no more than a few lines.
+  localStorage.setItem('recipes', JSON.stringify(recipes));
 }
 
 /**
@@ -60,12 +69,74 @@ function saveRecipesToStorage(recipes) {
 function initFormHandler() {
 
   // B2. TODO - Get a reference to the <form> element
+  const ff = document.querySelector("form");
   
   // B3. TODO - Add an event listener for the 'submit' event, which fires when the
   //            submit button is clicked
+  /*synth.addEventListener('voiceschanged', () => {
+    voices = synth.getVoices();
+    for (let i = 0; i < voices.length ; i++) {
+      const option = document.createElement('option');
+      option.textContent = `${voices[i].name} (${voices[i].lang})`;
+      option.setAttribute('lang', voices[i].lang);
+      option.setAttribute('voice', voices[i].name);
+      voSelect.appendChild(option);
+    }
+    console.log(voices);
+  });*/
+  const b3 = ff.querySelector("button[type=submit]");
+  b3.addEventListener('click', () => {
+    var ra = document.getElementsByName("rating");
+    var raa = "0";            
+              for(i = 0; i < ra.length; i++) {
+                  if(ra[i].checked){
+                      raa = ra[i];
+                  }
+    
+              }
+    const FormData = {
+      "imgSrc": ff.getElementById("imgSrc").value,
+      "imgAlt": ff.getElementById("imgAlt").value,
+      "titleLnk": ff.getElementById("titleLnk").value,
+      "titleTxt": ff.getElementById("titleTxt").value,
+      "organization": ff.getElementById("organization").value,
+      "rating": raa,
+      "numRatings": ff.getElementById("numRatings").value,
+      "lengthTime": ff.getElementById("lengthTime").value,
+      "ingredients": ff.getElementById("ingredients").value,
+    }
+    const recipeObject = {
+      "imgSrc": FormData.imgSrc,
+      "imgAlt": FormData.imgAlt,
+      "titleLnk": FormData.titleLnk,
+      "titleTxt": FormData.titleTxt,
+      "organization": FormData.organization,
+      "rating": FormData.rating,
+      "numRatings": FormData.numRatings,
+      "lengthTime": FormData.lengthTime,
+      "ingredients": FormData.ingredients,
+    };
+    const el = document.createElement("recipe-card");
+    el.data = recipeObject;
+    const ma = document.querySelector("main");
+    ma.append(el);
+    
+    let ret = JSON.parse(localStorage.getItem('recipes'));
+    ret += recipeObject;
+    const str = JSON.stringify(ret);
+    localStorage.setItem('recipes', str);
+  });
+
+  const b10 = ff.querySelector("button[type=button]");
+  b10.addEventListener('click', () => {
+    localStorage.removeItem('recipes');
+    const ma = document.querySelector("main");
+    ma.innerHTML = "";
+  })
 
   // Steps B4-B9 will occur inside the event listener from step B3
   // B4. TODO - Create a new FormData object from the <form> element reference above
+  
   // B5. TODO - Create an empty object (I'll refer to this object as recipeObject to
   //            make this easier to read), and then extract the keys and corresponding
   //            values from the FormData object and insert them into recipeObject
